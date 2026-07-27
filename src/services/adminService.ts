@@ -210,7 +210,7 @@ export const adminService = {
     return await get<ApiResponse<any>>('/admin/reports/hostel-performance', { params: { limit } });
   },
   exportReport: (type: string) => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://manageyourhostelapi.codextechinnovations.com/api';
     return `${baseUrl}/admin/reports/export?type=${type}`;
   }
 };
