@@ -30,10 +30,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('admin_token');
-      localStorage.removeItem('admin_user');
-      window.location.href = '/login';
+      const token = localStorage.getItem('admin_token');
+      // Don't redirect for the mock super-admin token so the actual 401 error stays visible.
+      if (token !== 'super-admin-mock-token') {
+        // Token expired or invalid
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
