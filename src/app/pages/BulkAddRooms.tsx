@@ -17,7 +17,7 @@ import { FormField, Badge } from '../../components/Modal';
 import { adminService } from '../../services/adminService';
 import { useToast } from '../components/Toast';
 
-interface PGOption {
+interface HostelOption {
   _id: string;
   name: string;
   ownerId?: string | { _id: string; name?: string };
@@ -54,45 +54,45 @@ const initialBulkForm: Record<string, BulkFormState> = {
 
 export function BulkAddRooms() {
   const { showToast } = useToast();
-  const [pgs, setPgs] = useState<PGOption[]>([]);
-  const [selectedPgId, setSelectedPgId] = useState('');
+  const [hostels, setHostels] = useState<HostelOption[]>([]);
+  const [selectedHostelId, setSelectedHostelId] = useState('');
   const [bulkForm, setBulkForm] = useState(initialBulkForm);
   const [existingRooms, setExistingRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [fetchingPGs, setFetchingPGs] = useState(true);
+  const [fetchingHostels, setFetchingHostels] = useState(true);
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
 
   useEffect(() => {
-    fetchPGs();
+    fetchHostels();
   }, []);
 
   useEffect(() => {
-    if (selectedPgId) {
-      fetchExistingRooms(selectedPgId);
+    if (selectedHostelId) {
+      fetchExistingRooms(selectedHostelId);
     } else {
       setExistingRooms([]);
     }
-  }, [selectedPgId]);
+  }, [selectedHostelId]);
 
-  const fetchPGs = async () => {
+  const fetchHostels = async () => {
     try {
-      setFetchingPGs(true);
-      const response = await adminService.getPGs({ limit: 1000 });
+      setFetchingHostels(true);
+      const response = await adminService.getHostels({ limit: 1000 });
       if (response.success) {
-        setPgs(response.data || []);
+        setHostels(response.data || []);
       }
     } catch (err) {
-      console.error('Error fetching PGs:', err);
-      showToast('error', 'Failed to load PGs');
+      console.error('Error fetching Hostels:', err);
+      showToast('error', 'Failed to load Hostels');
     } finally {
-      setFetchingPGs(false);
+      setFetchingHostels(false);
     }
   };
 
-  const fetchExistingRooms = async (pgId: string) => {
+  const fetchExistingRooms = async (hostelId: string) => {
     try {
-      const response = await adminService.getPGById(pgId);
+      const response = await adminService.getHostelById(hostelId);
       if (response.success) {
         setExistingRooms(response.data?.rooms || []);
       }
@@ -178,19 +178,19 @@ export function BulkAddRooms() {
     return roomsToCreate;
   };
 
-  const selectedPG = pgs.find((pg) => pg._id === selectedPgId);
-  const ownerId = typeof selectedPG?.ownerId === 'string' ? selectedPG.ownerId : selectedPG?.ownerId?._id;
+  const selectedHostel = hostels.find((hostel) => hostel._id === selectedHostelId);
+  const ownerId = typeof selectedHostel?.ownerId === 'string' ? selectedHostel.ownerId : selectedHostel?.ownerId?._id;
 
   const handleSubmit = async () => {
     setFormError('');
     setFormSuccess('');
 
-    if (!selectedPgId) {
-      setFormError('Please select a PG');
+    if (!selectedHostelId) {
+      setFormError('Please select a Hostel');
       return;
     }
     if (!ownerId) {
-      setFormError('Selected PG does not have a valid owner');
+      setFormError('Selected Hostel does not have a valid owner');
       return;
     }
 
@@ -203,7 +203,7 @@ export function BulkAddRooms() {
 
     setLoading(true);
     try {
-      const response = await adminService.bulkAddRooms(selectedPgId, ownerId, roomsToCreate);
+      const response = await adminService.bulkAddRooms(selectedHostelId, ownerId, roomsToCreate);
 
       if (!response.success) {
         setFormError(response.message || 'Failed to create rooms');
@@ -229,7 +229,7 @@ export function BulkAddRooms() {
         }, {} as Record<string, BulkFormState>)
       );
 
-      fetchExistingRooms(selectedPgId);
+      fetchExistingRooms(selectedHostelId);
     } catch (err: any) {
       const message = err.response?.data?.message || err.message || 'Failed to create rooms. Please try again.';
       setFormError(message);
@@ -268,7 +268,7 @@ export function BulkAddRooms() {
     <div>
       <PageHeader
         title="Bulk Add Rooms"
-        description="Quickly add multiple rooms to a selected PG at once"
+        description="Quickly add multiple rooms to a selected Hostel at once"
       />
 
       {formError && (
@@ -298,27 +298,27 @@ export function BulkAddRooms() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-card/50 backdrop-blur-xl rounded-xl border border-border p-6 mb-6"
       >
-        <FormField label="Select PG" required>
+        <FormField label="Select Hostel" required>
           <select
             className="w-full px-3 py-2 rounded-lg border border-border bg-background"
-            value={selectedPgId}
-            onChange={(e) => setSelectedPgId(e.target.value)}
-            disabled={fetchingPGs}
+            value={selectedHostelId}
+            onChange={(e) => setSelectedHostelId(e.target.value)}
+            disabled={fetchingHostels}
           >
-            <option value="">{fetchingPGs ? 'Loading PGs...' : 'Select a PG'}</option>
-            {pgs.map((pg) => (
-              <option key={pg._id} value={pg._id}>
-                {pg.name} {pg.city ? `(${pg.city})` : ''}
+            <option value="">{fetchingHostels ? 'Loading Hostels...' : 'Select a Hostel'}</option>
+            {hostels.map((hostel) => (
+              <option key={hostel._id} value={hostel._id}>
+                {hostel.name} {hostel.city ? `(${hostel.city})` : ''}
               </option>
             ))}
           </select>
         </FormField>
 
-        {selectedPG && (
+        {selectedHostel && (
           <div className="p-3 bg-muted/30 rounded-lg text-sm">
             <span className="text-muted-foreground">Owner:</span>{' '}
             <span className="font-medium">
-              {typeof selectedPG.ownerId === 'object' ? selectedPG.ownerId?.name || 'Unknown' : selectedPG.ownerId || 'Unknown'}
+              {typeof selectedHostel.ownerId === 'object' ? selectedHostel.ownerId?.name || 'Unknown' : selectedHostel.ownerId || 'Unknown'}
             </span>
             {existingRooms.length > 0 && (
               <span className="ml-4 text-muted-foreground">
@@ -488,7 +488,7 @@ export function BulkAddRooms() {
       >
         <button
           onClick={() => {
-            setSelectedPgId('');
+            setSelectedHostelId('');
             setBulkForm(initialBulkForm);
             setFormError('');
             setFormSuccess('');
@@ -500,7 +500,7 @@ export function BulkAddRooms() {
         </button>
         <button
           onClick={handleSubmit}
-          disabled={loading || getTotalRooms() === 0 || !selectedPgId}
+          disabled={loading || getTotalRooms() === 0 || !selectedHostelId}
           className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#2d2d7e] to-[#1e3a8a] text-white rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (

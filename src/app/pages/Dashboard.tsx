@@ -7,7 +7,7 @@ import { PageHeader } from '../components/PageHeader';
 import { adminService } from '../../services/adminService';
 
 interface DashboardOverview {
-  totalPGs: number;
+  totalHostels: number;
   totalTenants: number;
   totalBookings: number;
   totalPayments: number;
@@ -18,7 +18,7 @@ interface DashboardOverview {
 }
 
 const defaultStats: DashboardOverview = {
-  totalPGs: 0,
+  totalHostels: 0,
   totalTenants: 0,
   totalBookings: 0,
   totalPayments: 0,
@@ -55,7 +55,7 @@ export function Dashboard() {
   }, []);
 
   const summaryChartData = useMemo(() => ([
-    { name: 'PGs', value: stats.totalPGs },
+    { name: 'Hostels', value: stats.totalHostels },
     { name: 'Tenants', value: stats.totalTenants },
     { name: 'Bookings', value: stats.totalBookings },
     { name: 'Payments', value: stats.totalPayments }
@@ -102,7 +102,7 @@ export function Dashboard() {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <StatsCard title="Total PGs" value={stats.totalPGs} icon={Building2} gradient="from-blue-600 to-blue-800" />
+        <StatsCard title="Total Hostels" value={stats.totalHostels} icon={Building2} gradient="from-blue-600 to-blue-800" />
         <StatsCard title="Total Tenants" value={stats.totalTenants} icon={Users} gradient="from-purple-600 to-purple-800" />
         <StatsCard title="Total Bookings" value={stats.totalBookings} icon={Calendar} gradient="from-pink-600 to-pink-800" />
         <StatsCard title="Pending Complaints" value={stats.pendingComplaints} icon={AlertCircle} gradient="from-red-600 to-red-800" />

@@ -19,6 +19,7 @@ interface RecipientCounts {
   owners: number;
   tenants: number;
   active: number;
+  admins: number;
   pushTokens: number;
 }
 

@@ -8,7 +8,7 @@ import { Modal, Badge } from '../../components/Modal';
 import { adminService } from '../../services/adminService';
 import { toast } from 'sonner';
 
-interface PGOwner {
+interface HostelOwner {
   _id: string;
   name: string;
   phone: string;
@@ -32,14 +32,14 @@ const statusColors: Record<string, string> = {
   rejected: 'bg-red-500/10 text-red-500'
 };
 
-export function PGOwnerVerification() {
+export function HostelOwnerVerification() {
   const navigate = useNavigate();
   const today = new Date().toISOString().slice(0, 10);
   const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const [owners, setOwners] = useState<PGOwner[]>([]);
+  const [owners, setOwners] = useState<HostelOwner[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [selectedOwner, setSelectedOwner] = useState<PGOwner | null>(null);
+  const [selectedOwner, setSelectedOwner] = useState<HostelOwner | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [approvalType, setApprovalType] = useState<'trial' | 'paid'>('trial');
   const [paymentForm, setPaymentForm] = useState({
@@ -49,7 +49,7 @@ export function PGOwnerVerification() {
     paymentMethod: 'manual',
     transactionId: ''
   });
-  const [subscribeOwner, setSubscribeOwner] = useState<PGOwner | null>(null);
+  const [subscribeOwner, setSubscribeOwner] = useState<HostelOwner | null>(null);
   const [subscribeForm, setSubscribeForm] = useState({
     plan: 'monthly',
     subscriptionStartDate: today,
@@ -67,7 +67,7 @@ export function PGOwnerVerification() {
   const fetchOwners = async () => {
     try {
       setLoading(true);
-      const response = await adminService.getPGOwners({ 
+      const response = await adminService.getHostelOwners({ 
         status: statusFilter || undefined 
       });
       if (response.success) {
@@ -80,13 +80,13 @@ export function PGOwnerVerification() {
     }
   };
 
-  const handleVerify = async (owner: PGOwner, newStatus: 'approved' | 'rejected') => {
+  const handleVerify = async (owner: HostelOwner, newStatus: 'approved' | 'rejected') => {
     try {
       const paymentPayload = newStatus === 'approved' && approvalType === 'paid'
         ? paymentForm
         : {};
 
-      await adminService.verifyPGOwner(owner._id, {
+      await adminService.verifyHostelOwner(owner._id, {
         status: newStatus,
         isVerified: newStatus === 'approved',
         ...paymentPayload
@@ -100,7 +100,7 @@ export function PGOwnerVerification() {
     }
   };
 
-  const openSubscribe = (owner: PGOwner) => {
+  const openSubscribe = (owner: HostelOwner) => {
     setSubscribeOwner(owner);
     setSubscribeForm({
       plan: 'monthly',
@@ -115,7 +115,7 @@ export function PGOwnerVerification() {
     if (!subscribeOwner) return;
     try {
       setSubscribeLoading(true);
-      await adminService.subscribePGOwner(subscribeOwner._id, subscribeForm);
+      await adminService.subscribeHostelOwner(subscribeOwner._id, subscribeForm);
       toast.success('Owner subscribed successfully');
       setSubscribeOwner(null);
       fetchOwners();
@@ -126,13 +126,13 @@ export function PGOwnerVerification() {
     }
   };
 
-  const submitFreeze = async (owner: PGOwner) => {
+  const submitFreeze = async (owner: HostelOwner) => {
     if (!window.confirm(`Freeze ${owner.name}'s plan? They will be locked out of the app.`)) {
       return;
     }
     try {
       setFreezeLoading(true);
-      await adminService.freezePGOwner(owner._id);
+      await adminService.freezeHostelOwner(owner._id);
       toast.success('Owner frozen');
       fetchOwners();
     } catch (err: any) {
@@ -147,9 +147,9 @@ export function PGOwnerVerification() {
       key: 'name', 
       label: 'Name', 
       sortable: true,
-      render: (value: string, row: PGOwner) => (
+      render: (value: string, row: HostelOwner) => (
         <button 
-          onClick={() => navigate(`/pg-owner-verification/${row._id}`)}
+          onClick={() => navigate(`/hostel-owner-verification/${row._id}`)}
           className="text-primary hover:underline font-medium"
         >
           {value}
@@ -177,7 +177,7 @@ export function PGOwnerVerification() {
     {
       key: 'actions',
       label: 'Actions',
-      render: (_: any, row: PGOwner) => (
+      render: (_: any, row: HostelOwner) => (
         <div className="flex items-center gap-2">
           {row.status === 'pending' && (
             <>
@@ -229,8 +229,8 @@ export function PGOwnerVerification() {
   return (
     <div>
       <PageHeader
-        title="PG Owner Verification"
-        description="Verify and manage PG owner requests"
+        title="Hostel Owner Verification"
+        description="Verify and manage Hostel owner requests"
       />
 
       {/* Stats */}
@@ -335,7 +335,7 @@ export function PGOwnerVerification() {
       </motion.div>
 
       {/* Verify Modal */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Verify PG Owner" size="md">
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Verify Hostel Owner" size="md">
         {selectedOwner && (
           <div>
             <div className="bg-muted/30 rounded-lg p-4 mb-6">
@@ -351,7 +351,7 @@ export function PGOwnerVerification() {
                 <span className="font-medium">Warning</span>
               </div>
               <p className="text-sm text-yellow-600/80 mt-1">
-                Upon approval, all PGs added by this owner will be automatically verified and available.
+                Upon approval, all Hostels added by this owner will be automatically verified and available.
               </p>
             </div>
 

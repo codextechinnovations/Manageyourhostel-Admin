@@ -1,6 +1,6 @@
-# ManageMyPG Admin Panel
+# ManageMyHostel Admin Panel
 
-A modern, secure, and high-performance admin dashboard for ManageMyPG - a comprehensive PG (Paying Guest) management platform.
+A modern, secure, and high-performance admin dashboard for ManageMyHostel - a comprehensive Hostel management platform.
 
 **Built by:** Codex Tech Innovations and Consultants LLP
 
@@ -45,7 +45,7 @@ src/
 │   ├── pages/               # Page components
 │   │   ├── Login.tsx        # Authentication page
 │   │   ├── Dashboard.tsx    # Main overview dashboard
-│   │   ├── PGManagement.tsx # PG listings management
+│   │   ├── HostelManagement.tsx # Hostel listings management
 │   │   ├── Tenants.tsx      # Tenant management
 │   │   ├── Bookings.tsx     # Booking management
 │   │   ├── Payments.tsx     # Payment & revenue tracking
@@ -71,7 +71,7 @@ src/
 The admin panel uses JWT-based authentication with role-based access control (RBAC):
 
 - **Super Admin**: Full system access
-- **Admin**: PG and tenant management
+- **Admin**: Hostel and tenant management
 - **Operations**: Support and basic analytics
 
 ### Demo Credentials
@@ -81,17 +81,17 @@ The admin panel uses JWT-based authentication with role-based access control (RB
 ## 📊 Modules & Features
 
 ### 1. Dashboard Overview
-- Total PGs, Tenants, Bookings, Revenue statistics
+- Total Hostels, Tenants, Bookings, Revenue statistics
 - Revenue & booking trend charts
 - Occupancy status visualization
 - Recent activities feed
 
-### 2. PG Management
-- View all registered PGs
+### 2. Hostel Management
+- View all registered Hostels
 - Approve/reject new listings
-- Edit PG details
-- Block/suspend PGs
-- Revenue analytics per PG
+- Edit Hostel details
+- Block/suspend Hostels
+- Revenue analytics per Hostel
 
 ### 3. Tenant Management
 - View all platform tenants
@@ -238,7 +238,7 @@ For issues or questions, contact: support@codextech.com
 
 ---
 
-**Note**: This is an internal admin panel for ManageMyPG operations team only. Not for PG owners or tenants.
+**Note**: This is an internal admin panel for ManageMyHostel operations team only. Not for Hostel owners or tenants.
 
 ## Production Status
 

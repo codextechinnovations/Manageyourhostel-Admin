@@ -13,49 +13,49 @@ interface Expense {
   category: string;
   expense_date: string;
   note?: string;
-  pgId?: string;
-  pg_id?: string;
+  hostelId?: string;
+  hostel_id?: string;
   createdAt: string;
 }
 
 export function Expenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [pgs, setPGs] = useState<{_id: string; name: string; ownerId?: string}[]>([]);
+  const [hostels, setHostels] = useState<{_id: string; name: string; ownerId?: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [pgFilter, setPgFilter] = useState<string>('');
+  const [hostelFilter, setHostelFilter] = useState<string>('');
 
   const [newExpense, setNewExpense] = useState({
-    pgId: '', title: '', amount: 0, category: 'MAINTENANCE', expense_date: new Date().toISOString().split('T')[0], note: ''
+    hostelId: '', title: '', amount: 0, category: 'MAINTENANCE', expense_date: new Date().toISOString().split('T')[0], note: ''
   });
 
   useEffect(() => {
     fetchExpenses();
-    fetchPGs();
+    fetchHostels();
   }, []);
 
   useEffect(() => {
     fetchExpenses();
-  }, [pgFilter]);
+  }, [hostelFilter]);
 
-  const fetchPGs = async () => {
+  const fetchHostels = async () => {
     try {
-      const response = await adminService.getPGs({ limit: 100 });
+      const response = await adminService.getHostels({ limit: 100 });
       if (response.success) {
-        setPGs(response.data.map((pg: any) => ({ _id: pg._id, name: pg.name, ownerId: pg.ownerId?._id || pg.ownerId })));
+        setHostels(response.data.map((hostel: any) => ({ _id: hostel._id, name: hostel.name, ownerId: hostel.ownerId?._id || hostel.ownerId })));
       }
     } catch (err) {
-      console.error('Error fetching PGs:', err);
+      console.error('Error fetching Hostels:', err);
     }
   };
 
   const fetchExpenses = async () => {
     try {
       setLoading(true);
-      const response = await adminService.getExpenses({ limit: 100, pgId: pgFilter || undefined });
+      const response = await adminService.getExpenses({ limit: 100, hostelId: hostelFilter || undefined });
       if (response.success) {
         setExpenses(response.data);
       } else {
@@ -72,14 +72,14 @@ export function Expenses() {
   const handleAddExpense = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const selectedPg = pgs.find((pg) => pg._id === newExpense.pgId);
+      const selectedHostel = hostels.find((hostel) => hostel._id === newExpense.hostelId);
       await adminService.createExpense({
         ...newExpense,
-        ownerId: selectedPg?.ownerId,
+        ownerId: selectedHostel?.ownerId,
         expense_date: new Date(newExpense.expense_date)
       });
       setShowAddModal(false);
-      setNewExpense({ pgId: '', title: '', amount: 0, category: 'MAINTENANCE', expense_date: new Date().toISOString().split('T')[0], note: '' });
+      setNewExpense({ hostelId: '', title: '', amount: 0, category: 'MAINTENANCE', expense_date: new Date().toISOString().split('T')[0], note: '' });
       fetchExpenses();
     } catch (err) {
       console.error('Error adding expense:', err);
@@ -120,12 +120,12 @@ export function Expenses() {
       render: (v: string) => new Date(v).toLocaleDateString()
     },
     {
-      key: 'pgId',
-      label: 'PG',
+      key: 'hostelId',
+      label: 'Hostel',
       render: (v: any) => {
         if (!v) return '-';
         if (typeof v === 'string') {
-          return pgs.find((pg) => pg._id === v)?.name || v.slice(-6);
+          return hostels.find((hostel) => hostel._id === v)?.name || v.slice(-6);
         }
         return v?.name || '-';
       }
@@ -145,7 +145,7 @@ export function Expenses() {
     <div>
       <PageHeader
         title="Expense Management"
-        description="Track and manage all PG expenses."
+        description="Track and manage all Hostel expenses."
         action={
           <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#2d2d7e] to-[#1e3a8a] text-white rounded-lg shadow-lg hover:shadow-xl transition-all">
             <Plus className="w-4 h-4" />
@@ -185,20 +185,20 @@ export function Expenses() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card/50 backdrop-blur-xl rounded-xl border border-border p-4 mb-6">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
-            <label className="text-sm text-muted-foreground">Filter by PG:</label>
+            <label className="text-sm text-muted-foreground">Filter by Hostel:</label>
             <select
               className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
-              value={pgFilter}
-              onChange={(e) => setPgFilter(e.target.value)}
+              value={hostelFilter}
+              onChange={(e) => setHostelFilter(e.target.value)}
             >
-              <option value="">All PGs</option>
-              {pgs.map(pg => (
-                <option key={pg._id} value={pg._id}>{pg.name}</option>
+              <option value="">All Hostels</option>
+              {hostels.map(hostel => (
+                <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
               ))}
             </select>
           </div>
-          {pgFilter && (
-            <button onClick={() => setPgFilter('')} className="text-sm text-primary hover:underline">
+          {hostelFilter && (
+            <button onClick={() => setHostelFilter('')} className="text-sm text-primary hover:underline">
               Clear filter
             </button>
           )}
@@ -213,16 +213,16 @@ export function Expenses() {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Expense" size="md">
         <form onSubmit={handleAddExpense}>
           <div className="space-y-4">
-            <FormField label="Select PG *" required>
+            <FormField label="Select Hostel *" required>
               <select
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background"
-                value={newExpense.pgId}
-                onChange={(e) => setNewExpense({ ...newExpense, pgId: e.target.value })}
+                value={newExpense.hostelId}
+                onChange={(e) => setNewExpense({ ...newExpense, hostelId: e.target.value })}
                 required
               >
-                <option value="">Select PG</option>
-                {pgs.map(pg => (
-                  <option key={pg._id} value={pg._id}>{pg.name}</option>
+                <option value="">Select Hostel</option>
+                {hostels.map(hostel => (
+                  <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
                 ))}
               </select>
             </FormField>
@@ -318,13 +318,13 @@ export function Expenses() {
                 <span className="font-medium">{new Date(selectedExpense.expense_date).toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-border/50">
-                <span className="text-muted-foreground">PG</span>
+                <span className="text-muted-foreground">Hostel</span>
                 <span className="font-medium">
                   {(() => {
-                    const pgRef = selectedExpense.pgId || selectedExpense.pg_id;
-                    if (!pgRef) return '-';
-                    const matched = pgs.find((pg) => pg._id === pgRef);
-                    return matched?.name || (typeof pgRef === 'string' ? pgRef.slice(-6) : '-');
+                    const hostelRef = selectedExpense.hostelId || selectedExpense.hostel_id;
+                    if (!hostelRef) return '-';
+                    const matched = hostels.find((hostel) => hostel._id === hostelRef);
+                    return matched?.name || (typeof hostelRef === 'string' ? hostelRef.slice(-6) : '-');
                   })()}
                 </span>
               </div>

@@ -36,7 +36,7 @@ export function Settings() {
               <label className="block text-sm mb-2">Platform Name</label>
               <input
                 type="text"
-                defaultValue="ManageYourPG"
+                defaultValue="ManageYourHostel"
                 disabled
                 className="w-full px-4 py-2 bg-input rounded-lg border border-border opacity-60 cursor-not-allowed"
               />
@@ -45,7 +45,7 @@ export function Settings() {
               <label className="block text-sm mb-2">Support Email</label>
               <input
                 type="email"
-                defaultValue="support@managemypg.com"
+                defaultValue="support@manageyourhostel.com"
                 disabled
                 className="w-full px-4 py-2 bg-input rounded-lg border border-border opacity-60 cursor-not-allowed"
               />

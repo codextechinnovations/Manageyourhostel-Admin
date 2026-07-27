@@ -2,7 +2,7 @@ import { get, post, put } from './apiClient';
 import { ApiResponse, Booking } from '../types/api';
 
 export const bookingService = {
-  getAll: async (params?: { page?: number; limit?: number; status?: string; pgId?: string }): Promise<ApiResponse<Booking[]>> => {
+  getAll: async (params?: { page?: number; limit?: number; status?: string; hostelId?: string }): Promise<ApiResponse<Booking[]>> => {
     return await get<ApiResponse<Booking[]>>('/bookings', { params });
   },
 

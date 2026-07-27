@@ -9,7 +9,7 @@ import { adminService } from '../../services/adminService';
 interface Complaint {
   _id: string;
   ownerId?: { _id: string; name: string; phone: string; email: string };
-  pgId?: { _id: string; name: string };
+  hostelId?: { _id: string; name: string };
   ownerName: string;
   ownerPhone?: string;
   title: string;
@@ -36,33 +36,33 @@ const issueTypes = [
 
 export function Complaints() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
-  const [pgs, setPgs] = useState<{_id: string; name: string}[]>([]);
+  const [hostels, setHostels] = useState<{_id: string; name: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [pgFilter, setPgFilter] = useState<string>('');
+  const [hostelFilter, setHostelFilter] = useState<string>('');
   const [issueTypeFilter, setIssueTypeFilter] = useState<string>('');
   const [adminNotes, setAdminNotes] = useState('');
 
   useEffect(() => {
     fetchComplaints();
-    fetchPGs();
+    fetchHostels();
   }, []);
 
   useEffect(() => {
     fetchComplaints();
-  }, [statusFilter, pgFilter, issueTypeFilter]);
+  }, [statusFilter, hostelFilter, issueTypeFilter]);
 
-  const fetchPGs = async () => {
+  const fetchHostels = async () => {
     try {
-      const response = await adminService.getPGs({ limit: 100 });
+      const response = await adminService.getHostels({ limit: 100 });
       if (response.success) {
-        setPgs(response.data.map((pg: any) => ({ _id: pg._id, name: pg.name })));
+        setHostels(response.data.map((hostel: any) => ({ _id: hostel._id, name: hostel.name })));
       }
     } catch (err) {
-      console.error('Error fetching PGs:', err);
+      console.error('Error fetching Hostels:', err);
     }
   };
 
@@ -72,7 +72,7 @@ export function Complaints() {
       const response = await adminService.getComplaints({
         limit: 100,
         status: statusFilter || undefined,
-        pgId: pgFilter || undefined
+        hostelId: hostelFilter || undefined
       });
       if (response.success) {
         let data = response.data;
@@ -158,8 +158,8 @@ export function Complaints() {
       <span className="px-2 py-1 bg-muted rounded-md text-xs">{v}</span>
     )},
     {
-      key: 'pgId',
-      label: 'PG',
+      key: 'hostelId',
+      label: 'Hostel',
       render: (v: any) => (
         <div className="flex items-center gap-1">
           <Building2 className="w-3 h-3 text-muted-foreground" />
@@ -202,7 +202,7 @@ export function Complaints() {
     <div>
       <PageHeader
         title="Complaints & Support Requests"
-        description="Manage support requests from PG owners."
+        description="Manage support requests from Hostel owners."
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -281,20 +281,20 @@ export function Complaints() {
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-sm text-muted-foreground">PG:</label>
+            <label className="text-sm text-muted-foreground">Hostel:</label>
             <select
               className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
-              value={pgFilter}
-              onChange={(e) => setPgFilter(e.target.value)}
+              value={hostelFilter}
+              onChange={(e) => setHostelFilter(e.target.value)}
             >
-              <option value="">All PGs</option>
-              {pgs.map(pg => (
-                <option key={pg._id} value={pg._id}>{pg.name}</option>
+              <option value="">All Hostels</option>
+              {hostels.map(hostel => (
+                <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
               ))}
             </select>
           </div>
-          {(statusFilter || pgFilter || issueTypeFilter) && (
-            <button onClick={() => { setStatusFilter(''); setPgFilter(''); setIssueTypeFilter(''); }} className="text-sm text-primary hover:underline">
+          {(statusFilter || hostelFilter || issueTypeFilter) && (
+            <button onClick={() => { setStatusFilter(''); setHostelFilter(''); setIssueTypeFilter(''); }} className="text-sm text-primary hover:underline">
               Clear filters
             </button>
           )}
@@ -362,13 +362,13 @@ export function Complaints() {
                 <p className="text-xs text-muted-foreground">Priority</p>
                 {getPriorityBadge(selectedComplaint.priority)}
               </div>
-              {selectedComplaint.pgId && (
+              {selectedComplaint.hostelId && (
                 <div className="bg-muted/30 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <Building2 className="w-4 h-4 text-muted-foreground" />
-                    <p className="text-xs text-muted-foreground">PG</p>
+                    <p className="text-xs text-muted-foreground">Hostel</p>
                   </div>
-                  <p className="font-medium">{selectedComplaint.pgId.name}</p>
+                  <p className="font-medium">{selectedComplaint.hostelId.name}</p>
                 </div>
               )}
               <div className="bg-muted/30 rounded-lg p-3">

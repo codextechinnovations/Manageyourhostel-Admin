@@ -39,7 +39,7 @@ export function Reports() {
 
   const totalRevenue = stats?.paymentStats?.total || 0;
   const totalExpenses = stats?.expenseStats?.total || 0;
-  const totalPGs = stats?.pgStats?.reduce((sum: number, s: any) => sum + s.count, 0) || 0;
+  const totalHostels = stats?.hostelStats?.reduce((sum: number, s: any) => sum + s.count, 0) || 0;
   const totalTenants = stats?.tenantStats?.reduce((sum: number, s: any) => sum + s.count, 0) || 0;
 
   const growthRate = monthlyData.length > 1
@@ -73,8 +73,8 @@ export function Reports() {
               <Building2 className="w-6 h-6 text-blue-500" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Total PGs</p>
-              <p className="text-2xl font-semibold">{totalPGs}</p>
+              <p className="text-sm text-muted-foreground">Total Hostels</p>
+              <p className="text-2xl font-semibold">{totalHostels}</p>
             </div>
           </div>
         </motion.div>
@@ -208,11 +208,11 @@ export function Reports() {
           className="bg-card/50 backdrop-blur-xl rounded-xl border border-border p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3>PG Types</h3>
+            <h3>Hostel Types</h3>
             <Building2 className="w-5 h-5 text-blue-500" />
           </div>
           <div className="space-y-2">
-            {stats?.pgStats?.map((stat: any, i: number) => (
+            {stats?.hostelStats?.map((stat: any, i: number) => (
               <div key={i} className="flex justify-between items-center">
                 <span className="text-sm capitalize">{stat._id || 'Unknown'}</span>
                 <span className="font-medium">{stat.count}</span>
@@ -272,7 +272,7 @@ export function Reports() {
         <h3 className="mb-4">Export Reports</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { name: 'PG Performance Report', description: 'Detailed analytics for all PGs', format: 'CSV', type: 'pgs' },
+            { name: 'Hostel Performance Report', description: 'Detailed analytics for all Hostels', format: 'CSV', type: 'hostels' },
             { name: 'Tenant Report', description: 'Complete tenant listing', format: 'CSV', type: 'tenants' },
             { name: 'Payment Report', description: 'All payment transactions', format: 'CSV', type: 'payments' }
           ].map((report, i) => (

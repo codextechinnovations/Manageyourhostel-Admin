@@ -3,8 +3,8 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
-import { PGManagement } from './pages/PGManagement';
-import { PGOnboarding } from './pages/PGOnboarding';
+import { HostelManagement } from './pages/HostelManagement';
+import { HostelOnboarding } from './pages/HostelOnboarding';
 import { Tenants } from './pages/Tenants';
 import { Bookings } from './pages/Bookings';
 import { Payments } from './pages/Payments';
@@ -18,10 +18,11 @@ import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 import { NotFound } from './pages/NotFound';
 import { IdCardGenerator } from './pages/IdCardGenerator';
-import { PGCSVUpload } from './pages/PGCSVUpload';
+import { HostelCSVUpload } from './pages/HostelCSVUpload';
 import { BulkAddRooms } from './pages/BulkAddRooms';
-import { PGOwnerVerification } from './pages/PGOwnerVerification';
-import { PGOwnerDetail } from './pages/PGOwnerDetail';
+import { HostelOwnerVerification } from './pages/HostelOwnerVerification';
+import { HostelOwnerDetail } from './pages/HostelOwnerDetail';
+import { HostelDetail } from './pages/HostelDetail';
 import { AppVersionSettings } from './pages/AppVersionSettings';
 
 export const router = createBrowserRouter([
@@ -38,12 +39,13 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, Component: Dashboard },
-      { path: 'pg-management', Component: PGManagement },
-      { path: 'pg-onboarding', Component: PGOnboarding },
-      { path: 'pg-csv-upload', Component: PGCSVUpload },
+      { path: 'hostel-management', Component: HostelManagement },
+      { path: 'hostel-management/:id', Component: HostelDetail },
+      { path: 'hostel-onboarding', Component: HostelOnboarding },
+      { path: 'hostel-csv-upload', Component: HostelCSVUpload },
       { path: 'bulk-add-rooms', Component: BulkAddRooms },
-      { path: 'pg-owner-verification', Component: PGOwnerVerification },
-      { path: 'pg-owner-verification/:id', Component: PGOwnerDetail },
+      { path: 'hostel-owner-verification', Component: HostelOwnerVerification },
+      { path: 'hostel-owner-verification/:id', Component: HostelOwnerDetail },
       { path: 'tenants', Component: Tenants },
       { path: 'bookings', Component: Bookings },
       { path: 'payments', Component: Payments },

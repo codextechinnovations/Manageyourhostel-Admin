@@ -24,7 +24,7 @@ interface TenantData {
   userPhoto?: string;
   passportPhoto?: string;
   id_proof?: string;
-  pgId?: {
+  hostelId?: {
     name?: string;
     address?: string;
     area?: string;
@@ -108,7 +108,7 @@ export function IdCardGenerator() {
   };
 
   const tenantId = tenant?._id?.slice(-8).toUpperCase() || 'N/A';
-  const pgName = tenant?.pgId?.name || 'ManageYourPG';
+  const hostelName = tenant?.hostelId?.name || 'ManageYourHostel';
   const issuedOn = formatDate(tenant?.checkInDate);
   const aadhaarFmt = tenant?.aadhaar
     ? tenant.aadhaar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3')
@@ -199,7 +199,7 @@ export function IdCardGenerator() {
                   </div>
                   <div className="flex-1">
                     <p className="font-medium">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.phone} {t.pgId?.name ? `• ${t.pgId.name}` : ''}</p>
+                    <p className="text-xs text-muted-foreground">{t.phone} {t.hostelId?.name ? `• ${t.hostelId.name}` : ''}</p>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded ${
                     t.status?.toLowerCase() === 'active' ? 'bg-green-100 text-green-700' : 
@@ -259,11 +259,11 @@ export function IdCardGenerator() {
                 <div className="header-top">
                   <div className="logo-box">
                     <div className="logo-slash"></div>
-                    <span className="logo-text">PG</span>
+                    <span className="logo-text">Hostel</span>
                   </div>
-                  <div className="pg-title-wrap">
-                    <div className="pg-title">{pgName}</div>
-                    <div className="pg-sub">Tenant Identification Card</div>
+                  <div className="hostel-title-wrap">
+                    <div className="hostel-title">{hostelName}</div>
+                    <div className="hostel-sub">Tenant Identification Card</div>
                   </div>
                   <div className="active-badge">● ACTIVE</div>
                 </div>
@@ -331,12 +331,12 @@ export function IdCardGenerator() {
               
               <div className="card-back-header">
                 <div>
-                  <div className="back-title">{pgName}</div>
+                  <div className="back-title">{hostelName}</div>
                   <div className="back-sub">Tenant ID — Reverse Side</div>
                 </div>
                 <div className="logo-box" style={{ width: '32px', height: '32px', borderRadius: '8px' }}>
                   <div className="logo-slash"></div>
-                  <span className="logo-text" style={{ fontSize: '11px' }}>PG</span>
+                  <span className="logo-text" style={{ fontSize: '11px' }}>Hostel</span>
                 </div>
               </div>
 
@@ -355,7 +355,7 @@ export function IdCardGenerator() {
                       <div className="qr-detail">
                         {tenant.name}<br/>
                         ID: #{tenantId}<br/>
-                        {pgName}<br/>
+                        {hostelName}<br/>
                         Ph: {tenant.phone}
                       </div>
                     </div>
@@ -412,7 +412,7 @@ export function IdCardGenerator() {
                 </div>
                 <div className="back-footer-right">
                   <div className="sig-label">Authorised by</div>
-                  <div className="sig-name">{pgName} Management</div>
+                  <div className="sig-name">{hostelName} Management</div>
                 </div>
               </div>
             </div>
@@ -537,19 +537,19 @@ export function IdCardGenerator() {
           z-index: 1;
         }
         
-        .pg-title-wrap {
+        .hostel-title-wrap {
           flex: 1;
           padding: 0 10px;
         }
         
-        .pg-title {
+        .hostel-title {
           color: #fff;
           font-size: 14px;
           font-weight: 700;
           letter-spacing: -0.3px;
         }
         
-        .pg-sub {
+        .hostel-sub {
           color: rgba(255,255,255,0.55);
           font-size: 9px;
           font-weight: 500;

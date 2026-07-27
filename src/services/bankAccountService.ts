@@ -2,7 +2,7 @@ import { get, post, put, del } from './apiClient';
 import { ApiResponse, BankAccount } from '../types/api';
 
 export const bankAccountService = {
-  getAll: async (params?: { pgId?: string }): Promise<ApiResponse<BankAccount[]>> => {
+  getAll: async (params?: { hostelId?: string }): Promise<ApiResponse<BankAccount[]>> => {
     return await get<ApiResponse<BankAccount[]>>('/bank-accounts', { params });
   },
 

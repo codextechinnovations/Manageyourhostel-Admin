@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Eye, Trash2, CheckCircle, XCircle, UserPlus, Building2, AlertCircle, Camera, Upload, X } from 'lucide-react';
+import { Plus, Eye, Trash2, CheckCircle, XCircle, UserPlus, Building2, AlertCircle, Camera, Upload, X, Edit2 } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { DataTable } from '../components/DataTable';
 import { Modal, FormField, Badge } from '../../components/Modal';
@@ -9,7 +9,7 @@ import { Tenant } from '../../types/api';
 
 export function Tenants() {
   const [tenants, setTenants] = useState<any[]>([]);
-  const [pgs, setPGs] = useState<{_id: string; name: string}[]>([]);
+  const [hostels, setHostels] = useState<{_id: string; name: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -20,7 +20,7 @@ export function Tenants() {
   console.log(tenantDetails);
   
   const [detailLoading, setDetailLoading] = useState(false);
-  const [pgFilter, setPgFilter] = useState<string>('');
+  const [hostelFilter, setHostelFilter] = useState<string>('');
   const [uploading, setUploading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,7 +29,7 @@ export function Tenants() {
   const editAadharInputRef = useRef<HTMLInputElement>(null);
 
   const [newTenant, setNewTenant] = useState({
-    name: '', phone: '', email: '', pgId: '', roomNumber: '', monthlyRent: 0, securityDeposit: 0, aadhaarNumber: '', userPhoto: '', aadharCardPhoto: ''
+    name: '', phone: '', email: '', hostelId: '', roomNumber: '', monthlyRent: 0, securityDeposit: 0, aadhaarNumber: '', userPhoto: '', aadharCardPhoto: ''
   });
 
   const [editTenant, setEditTenant] = useState({
@@ -38,24 +38,24 @@ export function Tenants() {
 
   useEffect(() => {
     fetchTenants();
-    fetchPGs();
+    fetchHostels();
   }, []);
 
-  const fetchPGs = async () => {
+  const fetchHostels = async () => {
     try {
-      const response = await adminService.getPGs({ limit: 100 });
+      const response = await adminService.getHostels({ limit: 100 });
       if (response.success) {
-        setPGs(response.data.map((pg: any) => ({ _id: pg._id, name: pg.name })));
+        setHostels(response.data.map((hostel: any) => ({ _id: hostel._id, name: hostel.name })));
       }
     } catch (err) {
-      console.error('Error fetching PGs:', err);
+      console.error('Error fetching Hostels:', err);
     }
   };
 
   const fetchTenants = async () => {
     try {
       setLoading(true);
-      const response = await adminService.getTenants({ limit: 100, pgId: pgFilter || undefined });
+      const response = await adminService.getTenants({ limit: 100, hostelId: hostelFilter || undefined });
       if (response.success) {
         setTenants(response.data);
       } else {
@@ -71,7 +71,7 @@ export function Tenants() {
 
   useEffect(() => {
     fetchTenants();
-  }, [pgFilter]);
+  }, [hostelFilter]);
 
   const fetchTenantDetails = async (id: string) => {
     try {
@@ -169,7 +169,7 @@ export function Tenants() {
       });
       if (response.success) {
         setShowAddModal(false);
-        setNewTenant({ name: '', phone: '', email: '', pgId: '', roomNumber: '', monthlyRent: 0, securityDeposit: 0, aadhaarNumber: '', userPhoto: '', aadharCardPhoto: '' });
+        setNewTenant({ name: '', phone: '', email: '', hostelId: '', roomNumber: '', monthlyRent: 0, securityDeposit: 0, aadhaarNumber: '', userPhoto: '', aadharCardPhoto: '' });
         fetchTenants();
       }
     } catch (err) {
@@ -195,8 +195,8 @@ export function Tenants() {
     { key: 'name', label: 'Name', sortable: true },
     { key: 'phone', label: 'Phone' },
     { 
-      key: 'pgId', 
-      label: 'PG', 
+      key: 'hostelId', 
+      label: 'Hostel', 
       render: (v: any) => v?.name || '-'
     },
     { 
@@ -222,7 +222,7 @@ export function Tenants() {
       render: (_: any, row: any) => (
         <div className="flex items-center gap-1">
           <button onClick={() => handleEditTenant(row)} className="p-2 hover:bg-accent rounded-lg transition-colors text-blue-500" title="Edit">
-            <Plus className="w-4 h-4" />
+            <Edit2 className="w-4 h-4" />
           </button>
           <button onClick={() => fetchTenantDetails(row._id)} className="p-2 hover:bg-accent rounded-lg transition-colors" title="View Details">
             <Eye className="w-4 h-4" />
@@ -244,7 +244,7 @@ export function Tenants() {
     <div>
       <PageHeader
         title="Tenant Management"
-        description="Manage all tenants across PGs. Assign PGs and track tenant status."
+        description="Manage all tenants across Hostels. Assign Hostels and track tenant status."
         action={
           <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#2d2d7e] to-[#1e3a8a] text-white rounded-lg shadow-lg hover:shadow-xl transition-all">
             <UserPlus className="w-4 h-4" />
@@ -303,20 +303,20 @@ export function Tenants() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card/50 backdrop-blur-xl rounded-xl border border-border p-4 mb-6">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
-            <label className="text-sm text-muted-foreground">Filter by PG:</label>
+            <label className="text-sm text-muted-foreground">Filter by Hostel:</label>
             <select
               className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
-              value={pgFilter}
-              onChange={(e) => setPgFilter(e.target.value)}
+              value={hostelFilter}
+              onChange={(e) => setHostelFilter(e.target.value)}
             >
-              <option value="">All PGs</option>
-              {pgs.map(pg => (
-                <option key={pg._id} value={pg._id}>{pg.name}</option>
+              <option value="">All Hostels</option>
+              {hostels.map(hostel => (
+                <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
               ))}
             </select>
           </div>
-          {pgFilter && (
-            <button onClick={() => setPgFilter('')} className="text-sm text-primary hover:underline">
+          {hostelFilter && (
+            <button onClick={() => setHostelFilter('')} className="text-sm text-primary hover:underline">
               Clear filter
             </button>
           )}
@@ -361,10 +361,10 @@ export function Tenants() {
               </div>
             </div>
 
-            {tenantDetails.pgId && (
+            {tenantDetails.hostelId && (
               <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-                <p className="text-xs text-blue-500 font-medium mb-1">PG</p>
-                <p className="font-medium">{tenantDetails.pgId.name}</p>
+                <p className="text-xs text-blue-500 font-medium mb-1">Hostel</p>
+                <p className="font-medium">{tenantDetails.hostelId.name}</p>
               </div>
             )}
 
@@ -463,16 +463,16 @@ export function Tenants() {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Tenant" size="md">
         <form onSubmit={handleAddTenant}>
           <div className="space-y-4">
-            <FormField label="Select PG *" required>
+            <FormField label="Select Hostel *" required>
               <select
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background"
-                value={newTenant.pgId}
-                onChange={(e) => setNewTenant({ ...newTenant, pgId: e.target.value })}
+                value={newTenant.hostelId}
+                onChange={(e) => setNewTenant({ ...newTenant, hostelId: e.target.value })}
                 required
               >
-                <option value="">Select PG</option>
-                {pgs.map(pg => (
-                  <option key={pg._id} value={pg._id}>{pg.name}</option>
+                <option value="">Select Hostel</option>
+                {hostels.map(hostel => (
+                  <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
                 ))}
               </select>
             </FormField>

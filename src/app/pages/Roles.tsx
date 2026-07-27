@@ -8,10 +8,10 @@ import { adminService } from '../../services/adminService';
 
 const rolePermissions = {
   super_admin: ['All Permissions', 'User Management', 'System Configuration', 'Data Export'],
-  admin: ['All Permissions', 'User Management', 'PG Management', 'Reports'],
+  admin: ['All Permissions', 'User Management', 'Hostel Management', 'Reports'],
   operations: ['Complaints', 'Support', 'Notifications', 'Basic Analytics'],
   support: ['Complaints', 'Support Tickets', 'User Queries'],
-  sales_person: ['View PGs', 'Tenant Leads', 'Generate Bookings', 'Basic Reports']
+  sales_person: ['View Hostels', 'Tenant Leads', 'Generate Bookings', 'Basic Reports']
 };
 
 const roleColors = {

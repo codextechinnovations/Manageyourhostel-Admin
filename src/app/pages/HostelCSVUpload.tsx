@@ -4,7 +4,7 @@ import { Upload, FileSpreadsheet, CheckCircle, XCircle, AlertCircle, Send, Trash
 import { PageHeader } from '../components/PageHeader';
 import { adminService } from '../../services/adminService';
 
-interface PGUploadRow {
+interface HostelUploadRow {
   row: number;
   name: string;
   address: string;
@@ -23,15 +23,15 @@ interface PGUploadRow {
 }
 
 const sampleCSV = `Name,Address,Phone,Lat,Lng,Type,Image,Link
-"Sri om Sai Boys PG Yelahanka","280, 15th A Cross Rd Yelahanka","095916 99009",13.0930136,77.5846083,gents,"https://example.com/image1.jpg","https://maps.google.com/place1"
-"Royal paying guest pg mens","27, 1st Main Rd Yelahanka","072045 52872",13.096499,77.5833064,gents,"https://example.com/image2.jpg","https://maps.google.com/place2"
-"Aathithya PG","584, 11th B Main Rd","",13.0987609,77.5794166,ladies,"https://example.com/image3.jpg","https://maps.google.com/place3"`;
+"Sri om Sai Boys Hostel Yelahanka","280, 15th A Cross Rd Yelahanka","095916 99009",13.0930136,77.5846083,gents,"https://example.com/image1.jpg","https://maps.google.com/place1"
+"Royal Hostel for men","27, 1st Main Rd Yelahanka","072045 52872",13.096499,77.5833064,gents,"https://example.com/image2.jpg","https://maps.google.com/place2"
+"Aathithya Hostel","584, 11th B Main Rd","",13.0987609,77.5794166,ladies,"https://example.com/image3.jpg","https://maps.google.com/place3"`;
 
 // Phone numbers will be formatted: "095916 99009" → "9591699009", "072045 52872" → "7204552872"
 
-export function PGCSVUpload() {
+export function HostelCSVUpload() {
   const [file, setFile] = useState<File | null>(null);
-  const [parsedData, setParsedData] = useState<PGUploadRow[]>([]);
+  const [parsedData, setParsedData] = useState<HostelUploadRow[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
@@ -76,7 +76,7 @@ export function PGCSVUpload() {
         return;
       }
 
-      const data: PGUploadRow[] = [];
+      const data: HostelUploadRow[] = [];
       
       for (let i = 1; i < lines.length; i++) {
         const values = parseCSVLine(lines[i]);
@@ -101,7 +101,7 @@ export function PGCSVUpload() {
           continue;
         }
 
-        const row: PGUploadRow = {
+        const row: HostelUploadRow = {
           row: i + 1,
           name: getValue('Name'),
           address: getValue('Address'),
@@ -135,7 +135,7 @@ export function PGCSVUpload() {
     reader.readAsText(file);
   };
 
-  const geocodeAllRows = async (initialData: PGUploadRow[]) => {
+  const geocodeAllRows = async (initialData: HostelUploadRow[]) => {
     const rowsWithCoords = initialData.filter(r => r.lat && r.lng && r.lat !== 0 && r.lng !== 0);
     if (rowsWithCoords.length === 0) return;
 
@@ -198,7 +198,7 @@ export function PGCSVUpload() {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&zoom=18`,
         {
           headers: {
-            'User-Agent': 'ManageYourPGAdmin/1.0'
+            'User-Agent': 'ManageYourHostelAdmin/1.0'
           }
         }
       );
@@ -238,7 +238,7 @@ export function PGCSVUpload() {
       const row = validRows[i];
       
       try {
-        const pgData = {
+        const hostelData = {
           name: row.name,
           type: row.type === 'gents' ? 'male' : row.type === 'ladies' ? 'female' : 'colive',
           address: row.address,
@@ -264,7 +264,7 @@ export function PGCSVUpload() {
           }
         };
 
-        await adminService.createPG(pgData);
+        await adminService.createHostel(hostelData);
         
         const updatedSuccessData = [...parsedData];
         const successIdx = updatedSuccessData.findIndex(d => d.row === row.row);
@@ -301,7 +301,7 @@ export function PGCSVUpload() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'pg_sample.csv';
+    a.download = 'hostel_sample.csv';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -322,8 +322,8 @@ export function PGCSVUpload() {
   return (
     <div>
       <PageHeader
-        title="Bulk PG Upload"
-        description="Upload multiple PGs at once using CSV format"
+        title="Bulk Hostel Upload"
+        description="Upload multiple Hostels at once using CSV format"
       />
 
       {!showPreview ? (
@@ -336,9 +336,9 @@ export function PGCSVUpload() {
             <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <FileSpreadsheet className="w-10 h-10 text-white" />
             </div>
-            <h2 className="text-xl font-semibold mb-2">Upload PG Data via CSV</h2>
+            <h2 className="text-xl font-semibold mb-2">Upload Hostel Data via CSV</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Upload a CSV file containing PG details from Google Maps data.
+              Upload a CSV file containing Hostel details from Google Maps data.
             </p>
           </div>
 
@@ -541,7 +541,7 @@ export function PGCSVUpload() {
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    Upload {pendingCount} PGs
+                    Upload {pendingCount} Hostels
                   </>
                 )}
               </button>

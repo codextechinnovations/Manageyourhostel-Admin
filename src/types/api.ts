@@ -15,7 +15,7 @@ export interface ApiResponse<T> {
   };
 }
 
-export interface PG {
+export interface Hostel {
   _id: string;
   ownerId: string | { _id: string; name?: string; phone?: string; email?: string };
   name: string;
@@ -34,6 +34,8 @@ export interface PG {
   phone?: string;
   description?: string;
   amenities?: string[];
+  longTermRent?: number;
+  shortTermRent?: number;
   createdAt: string;
   updatedAt: string;
   status : string;
@@ -62,7 +64,7 @@ export interface Tenant {
 
 export interface Booking {
   _id: string;
-  pgId: string;
+  hostelId: string;
   tenantId: string;
   roomNumber: string;
   bedCount: number;
@@ -82,8 +84,8 @@ export interface Payment {
   _id: string;
   ownerId: string;
   tenantId: string;
-  pgId?: string;
-  pg_id?: string;
+  hostelId?: string;
+  hostel_id?: string;
   tenant_id?: string;
   owner_id?: string;
   amount: number;
@@ -103,7 +105,7 @@ export interface Payment {
 export interface Expense {
   _id: string;
   owner_id: string;
-  pg_id: string;
+  hostel_id: string;
   title: string;
   amount: number;
   category: string;
@@ -115,8 +117,8 @@ export interface Expense {
 
 export interface BankAccount {
   _id: string;
-  pgId: string;
-  pgName: string;
+  hostelId: string;
+  hostelName: string;
   ifscCode?: string;
   bankName?: string;
   bankBranch?: string;

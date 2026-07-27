@@ -11,7 +11,7 @@ export function Navbar() {
   const navigate = useNavigate();
 
   const notifications = [
-    { id: 1, title: 'New PG Registration', message: 'Green Valley PG awaiting approval', time: '5 min ago', unread: true },
+    { id: 1, title: 'New Hostel Registration', message: 'Green Valley Hostel awaiting approval', time: '5 min ago', unread: true },
     { id: 2, title: 'Payment Received', message: '₹25,000 from Booking #1234', time: '1 hour ago', unread: true },
     { id: 3, title: 'Complaint Filed', message: 'Tenant reported maintenance issue', time: '2 hours ago', unread: false }
   ];
@@ -30,7 +30,7 @@ export function Navbar() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search PGs, tenants, bookings..."
+              placeholder="Search Hostels, tenants, bookings..."
               className="w-full pl-10 pr-4 py-2 bg-input rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
             />
           </div>

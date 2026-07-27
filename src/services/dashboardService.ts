@@ -2,8 +2,8 @@ import { get } from './apiClient';
 import { ApiResponse, DashboardStats } from '../types/api';
 
 export const dashboardService = {
-  getStats: async (pgId?: string): Promise<ApiResponse<DashboardStats>> => {
-    return await get<ApiResponse<DashboardStats>>('/dashboard/summary', { params: { pgId } });
+  getStats: async (hostelId?: string): Promise<ApiResponse<DashboardStats>> => {
+    return await get<ApiResponse<DashboardStats>>('/dashboard/summary', { params: { hostelId } });
   },
 
   getPaymentSummary: async (month: number, year: number): Promise<ApiResponse<any>> => {

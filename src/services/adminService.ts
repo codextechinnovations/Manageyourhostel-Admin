@@ -7,28 +7,28 @@ export const adminService = {
     return await get<ApiResponse<any>>('/admin/dashboard/stats', { params: { ownerId } });
   },
 
-  // PG Management
-  getPGs: async (params?: { page?: number; limit?: number; search?: string; ownerId?: string; type?: string; status?: string; verification?: string }): Promise<ApiResponse<any>> => {
-    return await get<ApiResponse<any>>('/admin/pg', { params });
+  // Hostel Management
+  getHostels: async (params?: { page?: number; limit?: number; search?: string; ownerId?: string; type?: string; status?: string; verification?: string }): Promise<ApiResponse<any>> => {
+    return await get<ApiResponse<any>>('/admin/hostel', { params });
   },
-  getPGById: async (id: string): Promise<ApiResponse<any>> => {
-    return await get<ApiResponse<any>>(`/admin/pg/${id}`);
+  getHostelById: async (id: string): Promise<ApiResponse<any>> => {
+    return await get<ApiResponse<any>>(`/admin/hostel/${id}`);
   },
-  createPG: async (data: any): Promise<ApiResponse<any>> => {
-    return await post<ApiResponse<any>>('/admin/pg', data);
+  createHostel: async (data: any): Promise<ApiResponse<any>> => {
+    return await post<ApiResponse<any>>('/admin/hostel', data);
   },
-  verifyPG: async (id: string, data: { isVerified: boolean; fireSafety?: boolean; cctv?: boolean; policeVerification?: boolean }): Promise<ApiResponse<any>> => {
-    return await put<ApiResponse<any>>(`/admin/pg/${id}/verify`, data);
+  verifyHostel: async (id: string, data: { isVerified: boolean; fireSafety?: boolean; cctv?: boolean; policeVerification?: boolean }): Promise<ApiResponse<any>> => {
+    return await put<ApiResponse<any>>(`/admin/hostel/${id}/verify`, data);
   },
-  updatePG: async (id: string, data: any): Promise<ApiResponse<any>> => {
-    return await put<ApiResponse<any>>(`/admin/pg/${id}`, data);
+  updateHostel: async (id: string, data: any): Promise<ApiResponse<any>> => {
+    return await put<ApiResponse<any>>(`/admin/hostel/${id}`, data);
   },
-  deletePG: async (id: string): Promise<ApiResponse<any>> => {
-    return await del<ApiResponse<any>>(`/admin/pg/${id}`);
+  deleteHostel: async (id: string): Promise<ApiResponse<any>> => {
+    return await del<ApiResponse<any>>(`/admin/hostel/${id}`);
   },
 
   // Tenant Management
-  getTenants: async (params?: { page?: number; limit?: number; search?: string; status?: string; pgId?: string }): Promise<ApiResponse<any>> => {
+  getTenants: async (params?: { page?: number; limit?: number; search?: string; status?: string; hostelId?: string }): Promise<ApiResponse<any>> => {
     return await get<ApiResponse<any>>('/admin/tenants', { params });
   },
   getTenantById: async (id: string): Promise<ApiResponse<any>> => {
@@ -59,7 +59,7 @@ export const adminService = {
   },
 
   // Booking Management
-  getBookings: async (params?: { page?: number; limit?: number; status?: string; pgId?: string }): Promise<ApiResponse<any>> => {
+  getBookings: async (params?: { page?: number; limit?: number; status?: string; hostelId?: string }): Promise<ApiResponse<any>> => {
     return await get<ApiResponse<any>>('/admin/bookings', { params });
   },
   getBookingById: async (id: string): Promise<ApiResponse<any>> => {
@@ -73,7 +73,7 @@ export const adminService = {
   },
 
   // Expense Management
-  getExpenses: async (params?: { page?: number; limit?: number; pgId?: string; category?: string }): Promise<ApiResponse<any>> => {
+  getExpenses: async (params?: { page?: number; limit?: number; hostelId?: string; category?: string }): Promise<ApiResponse<any>> => {
     return await get<ApiResponse<any>>('/admin/expenses', { params });
   },
   createExpense: async (data: any): Promise<ApiResponse<any>> => {
@@ -89,7 +89,7 @@ export const adminService = {
   },
 
   // Complaint Management
-  getComplaints: async (params?: { page?: number; limit?: number; status?: string; priority?: string; pgId?: string }): Promise<ApiResponse<any>> => {
+  getComplaints: async (params?: { page?: number; limit?: number; status?: string; priority?: string; hostelId?: string }): Promise<ApiResponse<any>> => {
     return await get<ApiResponse<any>>('/admin/complaints', { params });
   },
   getComplaintById: async (id: string): Promise<ApiResponse<any>> => {
@@ -139,17 +139,17 @@ export const adminService = {
     return await put<ApiResponse<any>>(`/admin/sales-persons/${id}/toggle-status`, {});
   },
 
-  // PG Owner Management
-  getPGOwners: async (params?: { status?: string; search?: string }): Promise<ApiResponse<any>> => {
-    return await get<ApiResponse<any>>('/admin/pg-owners', { params });
+  // Hostel Owner Management
+  getHostelOwners: async (params?: { status?: string; search?: string }): Promise<ApiResponse<any>> => {
+    return await get<ApiResponse<any>>('/admin/hostel-owners', { params });
   },
-  getPGOwnerById: async (id: string): Promise<ApiResponse<any>> => {
-    return await get<ApiResponse<any>>(`/admin/pg-owners/${id}`);
+  getHostelOwnerById: async (id: string): Promise<ApiResponse<any>> => {
+    return await get<ApiResponse<any>>(`/admin/hostel-owners/${id}`);
   },
-  getPGOwnerPGs: async (id: string): Promise<ApiResponse<any>> => {
-    return await get<ApiResponse<any>>(`/admin/pg-owners/${id}/pgs`);
+  getHostelOwnerHostels: async (id: string): Promise<ApiResponse<any>> => {
+    return await get<ApiResponse<any>>(`/admin/hostel-owners/${id}/hostels`);
   },
-  verifyPGOwner: async (id: string, data: {
+  verifyHostelOwner: async (id: string, data: {
     status: string;
     isVerified: boolean;
     plan?: string;
@@ -158,19 +158,19 @@ export const adminService = {
     paymentMethod?: string;
     transactionId?: string;
   }): Promise<ApiResponse<any>> => {
-    return await put<ApiResponse<any>>(`/admin/pg-owners/${id}/verify`, data);
+    return await put<ApiResponse<any>>(`/admin/hostel-owners/${id}/verify`, data);
   },
-  subscribePGOwner: async (id: string, data: {
+  subscribeHostelOwner: async (id: string, data: {
     plan: string;
     subscriptionStartDate?: string;
     subscriptionEndDate: string;
     paymentMethod?: string;
     transactionId?: string;
   }): Promise<ApiResponse<any>> => {
-    return await put<ApiResponse<any>>(`/admin/pg-owners/${id}/subscribe`, data);
+    return await put<ApiResponse<any>>(`/admin/hostel-owners/${id}/subscribe`, data);
   },
-  freezePGOwner: async (id: string): Promise<ApiResponse<any>> => {
-    return await put<ApiResponse<any>>(`/admin/pg-owners/${id}/freeze`, {});
+  freezeHostelOwner: async (id: string): Promise<ApiResponse<any>> => {
+    return await put<ApiResponse<any>>(`/admin/hostel-owners/${id}/freeze`, {});
   },
 
   // App Version Management
@@ -189,14 +189,14 @@ export const adminService = {
     return await put<ApiResponse<any>>('/app/admin/version', data);
   },
 
-  // Send onboarding message to unverified PGs
-  sendOnboardingMessage: async (pgIds: string[]): Promise<ApiResponse<any>> => {
-    return await post<ApiResponse<any>>('/admin/pg/send-onboarding', { pgIds });
+  // Send onboarding message to unverified Hostels
+  sendOnboardingMessage: async (hostelIds: string[]): Promise<ApiResponse<any>> => {
+    return await post<ApiResponse<any>>('/admin/hostel/send-onboarding', { hostelIds });
   },
 
   // Room Management
-  bulkAddRooms: async (pgId: string, ownerId: string, rooms: any[]): Promise<ApiResponse<any>> => {
-    return await post<ApiResponse<any>>('/admin/rooms/bulk-add', { pgId, ownerId, rooms });
+  bulkAddRooms: async (hostelId: string, ownerId: string, rooms: any[]): Promise<ApiResponse<any>> => {
+    return await post<ApiResponse<any>>('/admin/rooms/bulk-add', { hostelId, ownerId, rooms });
   },
 
   // Reports
@@ -206,11 +206,11 @@ export const adminService = {
   getMonthlyReport: async (year?: number): Promise<ApiResponse<any>> => {
     return await get<ApiResponse<any>>('/admin/reports/monthly', { params: { year } });
   },
-  getPGPerformance: async (limit?: number): Promise<ApiResponse<any>> => {
-    return await get<ApiResponse<any>>('/admin/reports/pg-performance', { params: { limit } });
+  getHostelPerformance: async (limit?: number): Promise<ApiResponse<any>> => {
+    return await get<ApiResponse<any>>('/admin/reports/hostel-performance', { params: { limit } });
   },
   exportReport: (type: string) => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://api.manageyourpg.com/api';
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
     return `${baseUrl}/admin/reports/export?type=${type}`;
   }
 };

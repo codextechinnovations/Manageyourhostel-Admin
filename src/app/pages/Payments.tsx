@@ -10,7 +10,7 @@ import { Payment } from '../../types/api';
 
 export function Payments() {
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [pgs, setPgs] = useState<{ _id: string; name: string; ownerId?: string }[]>([]);
+  const [hostels, setHostels] = useState<{ _id: string; name: string; ownerId?: string }[]>([]);
   const [tenants, setTenants] = useState<{ _id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,23 +19,23 @@ export function Payments() {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const [newPayment, setNewPayment] = useState({
-    tenantId: '', pgId: '', amount: 0, type: 'rent', category: 'RENT', month: new Date().getMonth() + 1, year: new Date().getFullYear(), note: ''
+    tenantId: '', hostelId: '', amount: 0, type: 'rent', category: 'RENT', month: new Date().getMonth() + 1, year: new Date().getFullYear(), note: ''
   });
 
   useEffect(() => {
     fetchPayments();
-    fetchPGs();
+    fetchHostels();
     fetchTenants();
   }, []);
 
-  const fetchPGs = async () => {
+  const fetchHostels = async () => {
     try {
-      const response = await adminService.getPGs({ limit: 100 });
+      const response = await adminService.getHostels({ limit: 100 });
       if (response.success) {
-        setPgs(response.data.map((pg: any) => ({ _id: pg._id, name: pg.name, ownerId: pg.ownerId?._id || pg.ownerId })));
+        setHostels(response.data.map((hostel: any) => ({ _id: hostel._id, name: hostel.name, ownerId: hostel.ownerId?._id || hostel.ownerId })));
       }
     } catch (err) {
-      console.error('Error fetching PGs:', err);
+      console.error('Error fetching Hostels:', err);
     }
   };
 
@@ -70,7 +70,7 @@ export function Payments() {
   const handleAddPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const selectedPg = pgs.find((pg) => pg._id === newPayment.pgId);
+      const selectedHostel = hostels.find((hostel) => hostel._id === newPayment.hostelId);
       const paymentDate = new Date();
 
       await adminService.createPayment({
@@ -78,12 +78,12 @@ export function Payments() {
         paymentDate,
         payment_date: paymentDate,
         tenant_id: newPayment.tenantId,
-        pg_id: newPayment.pgId,
-        owner_id: selectedPg?.ownerId
+        hostel_id: newPayment.hostelId,
+        owner_id: selectedHostel?.ownerId
       });
 
       setShowAddModal(false);
-      setNewPayment({ tenantId: '', pgId: '', amount: 0, type: 'rent', category: 'RENT', month: new Date().getMonth() + 1, year: new Date().getFullYear(), note: '' });
+      setNewPayment({ tenantId: '', hostelId: '', amount: 0, type: 'rent', category: 'RENT', month: new Date().getMonth() + 1, year: new Date().getFullYear(), note: '' });
       fetchPayments();
     } catch (err) {
       console.error('Error adding payment:', err);
@@ -244,16 +244,16 @@ export function Payments() {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Payment" size="md">
         <form onSubmit={handleAddPayment}>
           <div className="space-y-4">
-            <FormField label="PG *">
+            <FormField label="Hostel *">
               <select
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background"
-                value={newPayment.pgId}
-                onChange={(e) => setNewPayment({ ...newPayment, pgId: e.target.value })}
+                value={newPayment.hostelId}
+                onChange={(e) => setNewPayment({ ...newPayment, hostelId: e.target.value })}
                 required
               >
-                <option value="">Select PG</option>
-                {pgs.map((pg) => (
-                  <option key={pg._id} value={pg._id}>{pg.name}</option>
+                <option value="">Select Hostel</option>
+                {hostels.map((hostel) => (
+                  <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
                 ))}
               </select>
             </FormField>

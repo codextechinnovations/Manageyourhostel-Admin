@@ -9,38 +9,38 @@ import { Booking } from '../../types/api';
 
 export function Bookings() {
   const [bookings, setBookings] = useState<any[]>([]);
-  const [pgs, setPGs] = useState<{_id: string; name: string}[]>([]);
+  const [hostels, setHostels] = useState<{_id: string; name: string}[]>([]);
   const [tenants, setTenants] = useState<{_id: string; name: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
-  const [pgFilter, setPgFilter] = useState<string>('');
+  const [hostelFilter, setHostelFilter] = useState<string>('');
 
   const [newBooking, setNewBooking] = useState({
-    pgId: '', tenantId: '', roomNumber: '', bedCount: 1, monthlyRent: 0, securityDeposit: 0,
+    hostelId: '', tenantId: '', roomNumber: '', bedCount: 1, monthlyRent: 0, securityDeposit: 0,
     checkInDate: new Date().toISOString().split('T')[0], expectedCheckOutDate: '', rentalType: 'longTerm'
   });
 
   useEffect(() => {
     fetchBookings();
-    fetchPGs();
+    fetchHostels();
     fetchTenants();
   }, []);
 
   useEffect(() => {
     fetchBookings();
-  }, [pgFilter]);
+  }, [hostelFilter]);
 
-  const fetchPGs = async () => {
+  const fetchHostels = async () => {
     try {
-      const response = await adminService.getPGs({ limit: 100 });
+      const response = await adminService.getHostels({ limit: 100 });
       if (response.success) {
-        setPGs(response.data.map((pg: any) => ({ _id: pg._id, name: pg.name })));
+        setHostels(response.data.map((hostel: any) => ({ _id: hostel._id, name: hostel.name })));
       }
     } catch (err) {
-      console.error('Error fetching PGs:', err);
+      console.error('Error fetching Hostels:', err);
     }
   };
 
@@ -58,7 +58,7 @@ export function Bookings() {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await adminService.getBookings({ limit: 100, pgId: pgFilter || undefined });
+      const response = await adminService.getBookings({ limit: 100, hostelId: hostelFilter || undefined });
       if (response.success) {
         setBookings(response.data);
       } else {
@@ -90,7 +90,7 @@ export function Bookings() {
     try {
       await adminService.createBooking(newBooking);
       setShowAddModal(false);
-      setNewBooking({ pgId: '', tenantId: '', roomNumber: '', bedCount: 1, monthlyRent: 0, securityDeposit: 0, checkInDate: new Date().toISOString().split('T')[0], expectedCheckOutDate: '', rentalType: 'longTerm' });
+      setNewBooking({ hostelId: '', tenantId: '', roomNumber: '', bedCount: 1, monthlyRent: 0, securityDeposit: 0, checkInDate: new Date().toISOString().split('T')[0], expectedCheckOutDate: '', rentalType: 'longTerm' });
       fetchBookings();
     } catch (err) {
       console.error('Error adding booking:', err);
@@ -124,8 +124,8 @@ export function Bookings() {
       render: (v: string) => <span className="font-mono text-xs">{v?.slice(-8) || '-'}</span>
     },
     { 
-      key: 'pgId', 
-      label: 'PG', 
+      key: 'hostelId', 
+      label: 'Hostel', 
       render: (v: any) => v?.name || '-' 
     },
     { 
@@ -172,7 +172,7 @@ export function Bookings() {
     <div>
       <PageHeader
         title="Booking Management"
-        description="Track and manage all bookings across PGs. Assign PG and tenant for each booking."
+        description="Track and manage all bookings across Hostels. Assign Hostel and tenant for each booking."
         action={
           <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#2d2d7e] to-[#1e3a8a] text-white rounded-lg shadow-lg hover:shadow-xl transition-all">
             <Plus className="w-4 h-4" />
@@ -231,20 +231,20 @@ export function Bookings() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card/50 backdrop-blur-xl rounded-xl border border-border p-4 mb-6">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
-            <label className="text-sm text-muted-foreground">Filter by PG:</label>
+            <label className="text-sm text-muted-foreground">Filter by Hostel:</label>
             <select
               className="px-3 py-2 rounded-lg border border-border bg-background text-sm"
-              value={pgFilter}
-              onChange={(e) => setPgFilter(e.target.value)}
+              value={hostelFilter}
+              onChange={(e) => setHostelFilter(e.target.value)}
             >
-              <option value="">All PGs</option>
-              {pgs.map(pg => (
-                <option key={pg._id} value={pg._id}>{pg.name}</option>
+              <option value="">All Hostels</option>
+              {hostels.map(hostel => (
+                <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
               ))}
             </select>
           </div>
-          {pgFilter && (
-            <button onClick={() => setPgFilter('')} className="text-sm text-primary hover:underline">
+          {hostelFilter && (
+            <button onClick={() => setHostelFilter('')} className="text-sm text-primary hover:underline">
               Clear filter
             </button>
           )}
@@ -259,16 +259,16 @@ export function Bookings() {
         <form onSubmit={handleAddBooking}>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Select PG *" required>
+              <FormField label="Select Hostel *" required>
                 <select
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background"
-                  value={newBooking.pgId}
-                  onChange={(e) => setNewBooking({ ...newBooking, pgId: e.target.value })}
+                  value={newBooking.hostelId}
+                  onChange={(e) => setNewBooking({ ...newBooking, hostelId: e.target.value })}
                   required
                 >
-                  <option value="">Select PG</option>
-                  {pgs.map(pg => (
-                    <option key={pg._id} value={pg._id}>{pg.name}</option>
+                  <option value="">Select Hostel</option>
+                  {hostels.map(hostel => (
+                    <option key={hostel._id} value={hostel._id}>{hostel.name}</option>
                   ))}
                 </select>
               </FormField>
@@ -392,13 +392,13 @@ export function Bookings() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {selectedBooking.pgId && (
+              {selectedBooking.hostelId && (
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <Building2 className="w-4 h-4 text-blue-500" />
-                    <p className="text-xs text-blue-500 font-medium">PG</p>
+                    <p className="text-xs text-blue-500 font-medium">Hostel</p>
                   </div>
-                  <p className="font-medium">{selectedBooking.pgId.name}</p>
+                  <p className="font-medium">{selectedBooking.hostelId.name}</p>
                 </div>
               )}
               {selectedBooking.tenantId && (

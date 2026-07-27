@@ -54,7 +54,7 @@ export function Login() {
               </div>
             </motion.div>
             <h1 className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-              ManageYourPG
+              ManageYourHostel
             </h1>
             <p className="text-sm text-muted-foreground">Admin Panel</p>
             <p className="text-xs text-muted-foreground mt-1">Codex Tech Innovations and Consultants LLP</p>
