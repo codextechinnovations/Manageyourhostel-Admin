@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Bell, User, LogOut, Settings } from 'lucide-react';
+import { Search, Bell, User, LogOut, Settings, Home } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router';
 
@@ -9,6 +9,9 @@ export function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  // TODO: Replace with the actual deployed PG admin URL.
+  const PG_ADMIN_URL = 'https://admin.manageyourpg.com';
 
   const notifications = [
     { id: 1, title: 'New Hostel Registration', message: 'Green Valley Hostel awaiting approval', time: '5 min ago', unread: true },
@@ -38,6 +41,15 @@ export function Navbar() {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
+          {/* Switch to PG */}
+          <a
+            href={PG_ADMIN_URL}
+            className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            <span>Switch to PG</span>
+          </a>
+
           {/* Notifications */}
           <div className="relative">
             <button
