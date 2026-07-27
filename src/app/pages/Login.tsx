@@ -18,7 +18,10 @@ export function Login() {
     setError('');
     try {
       await login(email, password);
-      navigate('/');
+      // Redirect the user back to the originally requested protected page, or home.
+      const redirectTo = localStorage.getItem('admin_redirect_after_login') || '/';
+      localStorage.removeItem('admin_redirect_after_login');
+      navigate(redirectTo, { replace: true });
     } catch (error: any) {
       console.error('Login failed:', error);
       setError(error.response?.data?.message || error.message || 'Login failed. Please check your credentials.');

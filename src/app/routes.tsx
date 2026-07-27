@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PublicRoute } from './components/PublicRoute';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { HostelManagement } from './pages/HostelManagement';
@@ -28,7 +29,11 @@ import { AppVersionSettings } from './pages/AppVersionSettings';
 export const router = createBrowserRouter([
   {
     path: '/login',
-    Component: Login
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    )
   },
   {
     path: '/',

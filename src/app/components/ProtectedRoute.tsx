@@ -1,8 +1,9 @@
-import { Navigate } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -16,6 +17,8 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAuthenticated) {
+    // Remember the page the user tried to access so we can redirect back after login.
+    localStorage.setItem('admin_redirect_after_login', location.pathname + location.search + location.hash);
     return <Navigate to="/login" replace />;
   }
 
